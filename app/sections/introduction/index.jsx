@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
-import Link from "next/link";
 import { LazyMotion, domAnimation, useInView } from "framer-motion";
-import { WelcomeAnimation } from "./IntroAnimation";
 import { useScrollTo } from "hooks";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "utils";
+import { WelcomeAnimation } from "./IntroAnimation";
 
 export function WelcomeSection() {
 	const ref = useRef(null);
@@ -23,6 +23,14 @@ export function WelcomeSection() {
 	]);
 
 	const onClick = (e) => scrollToEl(e);
+	const downloadCv = () => {
+		const link = document.createElement("a");
+		link.href = "../../../assets/CV.pdf"; // Update with the actual path to your CV
+		link.download = "CV.pdf";
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+	}
 
 	useEffect(() => {
 		let interval = setInterval(() => {
@@ -52,7 +60,7 @@ export function WelcomeSection() {
 							}}
 						>
 							<p>
-								Hi, I&apos;m <mark>Vasile</mark> a <mark>passionate</mark> software developer.
+								Hi, I&apos;m <mark>Mahmoud Hafez</mark> a <mark>passionate</mark> software developer.
 							</p>
 						</h1>
 
@@ -109,15 +117,25 @@ export function WelcomeSection() {
 								opacity: isInView ? 1 : 0,
 								transition: "all 0.9s cubic-bezier(0.17, 0.55, 0.55, 1) 0.5s"
 							}}
+							className="flex space-x-4"
 						>
 							<Link
 								href="#projects"
 								onClick={onClick}
-								tabIndex="0"
+								tabIndex="1"
 								className="btn"
 								aria-label="Latest projects"
 							>
 								See my latest projects
+							</Link>
+							<Link
+								href="#"
+								onClick={downloadCv}
+								tabIndex="0"
+								className="btn animate-gradient"
+								aria-label="Download My Cv"
+							>
+								Download
 							</Link>
 						</div>
 					</div>

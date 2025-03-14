@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef } from "react";
-import { LazyMotion, domAnimation, useInView } from "framer-motion";
 import { ConnectMedia, ScrollTop } from "components";
+import { LazyMotion, domAnimation, useInView } from "framer-motion";
+import { useRef } from "react";
 
 export function AppFooter() {
 	const footerRef = useRef(null);
@@ -21,7 +21,7 @@ export function AppFooter() {
 				}}
 			>
 				<div className="flex flex-col md:flex-row justify-between items-center gap-10 md:gap-5">
-					<p className="font-light">Copyright &copy; {year} Vasile Novatchii</p>
+					<p className="font-light">Copyright 2025 &copy; {year} Hafez Codex</p>
 					<ScrollTop />
 					<ConnectMedia />
 				</div>
