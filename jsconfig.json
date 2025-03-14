@@ -15,7 +15,7 @@
 		"isolatedModules": true,
 		"noEmit": true
 	},
-	"include": ["app", "public", "styles", "pages", "utils"],
+	"include": ["app", "public", "styles", "pages", "utils", "components/ProjectModal .js"],
 	"paths": {},
 	"exclude": ["node_modules"]
 }

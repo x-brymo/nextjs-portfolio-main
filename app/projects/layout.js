@@ -1,61 +1,58 @@
 "use client";
 
-import { Suspense, useState } from "react";
-import useSWR from "swr";
-import { ErrorBoundary } from "react-error-boundary";
 import { HeadingDivider, Loader } from "components";
-import { Filter } from "./components/Filter";
-import { fetcher } from "utils/fetcher";
+import { Suspense, useState } from "react";
+import { ErrorBoundary } from "react-error-boundary";
+import ProjectCard from "../../components/ProjectModal";
 import Error from "../error";
-import { Projects } from "./components/Projects";
-
-const url = `${process.env.NEXT_PUBLIC_SANITY_URL}${process.env.NEXT_PUBLIC_SANITY_ALL_PROJECTS}`;
+import { Filter } from "./component/Filter";
+import { MyProjects } from "./my-data";
+import Projects from "./projects"; // Corrected import statement
 
 export default function Page() {
-	const [category, setCategory] = useState(undefined);
-	const filterUrl = `${process.env.NEXT_PUBLIC_SANITY_URL}${process.env.NEXT_PUBLIC_SANITY_PROJECTS}${category}${process.env.NEXT_PUBLIC_SANITY_PROJECT_BY_CATEGORY}`;
+    const [category, setCategory] = useState(undefined);
+    const [selectedProject, setSelectedProject] = useState(null); // State for selected project
 
-	const fetchUrl = category ? filterUrl : url;
-	const { data, error } = useSWR(fetchUrl, fetcher);
-	const filteredProjects = data?.result;
+    const onClick = (catName) => setCategory(catName);
 
-	const onClick = (catName) => setCategory(catName);
+    const handleProjectClick = (project) => setSelectedProject(project); // Handle project click
 
-	if (error) {
-		return <div className="container-md">Error loading projects...</div>;
-	}
+    const filteredProjects = category
+        ? MyProjects.filter((project) => project.category === category)
+        : MyProjects;
 
-	return (
-		<div className="container-md">
-			<section id="projects" className="section">
-				<HeadingDivider title="Relevant projects" />
+    return (
+        <div className="container-md">
+            <section id="projects" className="section">
+                <HeadingDivider title="Relevant projects" />
 
-				<Filter onClick={onClick} />
+                <Filter onClick={onClick} />
 
-				<Suspense
-					fallback={
-						<div className="flex-center">
-							<Loader />
-						</div>
-					}
-				>
-					<ErrorBoundary FallbackComponent={Error}>
-						{filteredProjects === undefined ? (
-							// Loading state
-							<div className="flex-center">
-								<Loader />
-							</div>
-						) : filteredProjects.length === 0 ? (
-							// Empty state
-							<div className="flex-center">
-								<h3 className="text-2xl">No projects found in {category} category</h3>
-							</div>
-						) : (
-							<Projects projects={filteredProjects} />
-						)}
-					</ErrorBoundary>
-				</Suspense>
-			</section>
-		</div>
-	);
+                <Suspense
+                    fallback={
+                        <div className="flex-center">
+                            <Loader />
+                        </div>
+                    }
+                >
+                    <ErrorBoundary FallbackComponent={Error}>
+                        {filteredProjects.length === 0 ? (
+                            // Empty state
+                            <div className="flex-center">
+                                <h3 className="text-2xl">No projects found in {category} category</h3>
+                            </div>
+                        ) : (
+                            <Projects projects={filteredProjects} onProjectClick={handleProjectClick} />
+                        )}
+                    </ErrorBoundary>
+                </Suspense>
+            </section>
+			
+
+            {selectedProject && (
+                <ProjectCard project={selectedProject} onClose={() => setSelectedProject(null)} />
+				
+            )}
+        </div>
+    );
 }
