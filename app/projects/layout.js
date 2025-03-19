@@ -3,19 +3,19 @@
 import { HeadingDivider, Loader } from "components";
 import { Suspense, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import ProjectCard from "../../components/ProjectModal";
+import { ProjectCard } from "../../components/ProjectModal";
 import Error from "../error";
 import { Filter } from "./component/Filter";
 import { MyProjects } from "./my-data";
-import Projects from "./projects"; // Corrected import statement
+import Projects from "./projects";
 
 export default function Page() {
     const [category, setCategory] = useState(undefined);
-    const [selectedProject, setSelectedProject] = useState(null); // State for selected project
+    const [selectedProject, setSelectedProject] = useState(null);
 
     const onClick = (catName) => setCategory(catName);
 
-    const handleProjectClick = (project) => setSelectedProject(project); // Handle project click
+    const handleProjectClick = (project) => setSelectedProject(project);
 
     const filteredProjects = category
         ? MyProjects.filter((project) => project.category === category)
@@ -37,7 +37,6 @@ export default function Page() {
                 >
                     <ErrorBoundary FallbackComponent={Error}>
                         {filteredProjects.length === 0 ? (
-                            // Empty state
                             <div className="flex-center">
                                 <h3 className="text-2xl">No projects found in {category} category</h3>
                             </div>
@@ -47,11 +46,18 @@ export default function Page() {
                     </ErrorBoundary>
                 </Suspense>
             </section>
-			
 
             {selectedProject && (
-                <ProjectCard project={selectedProject} onClose={() => setSelectedProject(null)} />
-				
+                <ProjectCard
+                    image={selectedProject.image}
+                    title={selectedProject.title}
+                    description={selectedProject.desc}
+                    tools={selectedProject.tools}
+                    github={selectedProject.github}
+                    link={selectedProject.link}
+                    demo={selectedProject.demo}
+                    onClose={() => setSelectedProject(null)}
+                />
             )}
         </div>
     );

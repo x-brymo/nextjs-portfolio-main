@@ -25,7 +25,7 @@ export function WelcomeSection() {
 	const onClick = (e) => scrollToEl(e);
 	const downloadCv = () => {
 		const link = document.createElement("a");
-		link.href = "../../../assets/CV.pdf"; // Update with the actual path to your CV
+		link.href = "public/assets/CV.pdf"; // Update with the actual path to your CV
 		link.download = "CV.pdf";
 		document.body.appendChild(link);
 		link.click();

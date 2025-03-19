@@ -1,44 +1,102 @@
 import React from "react";
-import { FaGithub, FaExternalLinkAlt, FaPlay } from "react-icons/fa";
+import { Badge } from "./badge";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../components/Card";
+import { cn } from "../utils/utils";
+import Image from "next/image";
+import Link from "next/link";
+import Markdown from "react-markdown";
 
-const ProjectCard = ({ image, title, description, tools, github, demo, link }) => {
+function ProjectCard({
+  title,
+  href,
+  description,
+  dates,
+  tags,
+  link,
+  image,
+  video,
+  links,
+  className,
+}) {
   return (
-    <div className="max-w-sm border border-gray-300 rounded-lg shadow-lg overflow-hidden">
-      {/* Project Image */}
-      <img src={image} alt="Project" className="w-full h-48 object-cover" />
-      
-      {/* Card Content */}
-      <div className="p-4">
-        {/* Project Title */}
-        <h3 className="text-lg font-semibold">{title}</h3>
-        
-        {/* Project Description */}
-        <p className="text-gray-600 text-sm mt-1">{description}</p>
-
-        {/* Tools Used */}
-        <p className="text-gray-500 text-xs mt-2">{tools.join(", ")}</p>
-
-        {/* Icons */}
-        <div className="flex items-center justify-end gap-3 mt-3 text-gray-700">
-          {github && (
-            <a href={github} target="_blank" rel="noopener noreferrer">
-              <FaGithub className="text-xl hover:text-gray-900" />
-            </a>
-          )}
-          {link && (
-            <a href={link} target="_blank" rel="noopener noreferrer">
-              <FaExternalLinkAlt className="text-xl hover:text-blue-600" />
-            </a>
-          )}
-          {demo && (
-            <a href={demo} target="_blank" rel="noopener noreferrer">
-              <FaPlay className="text-xl hover:text-green-600" />
-            </a>
-          )}
+    <Card
+      className={
+        "flex flex-col overflow-hidden border hover:shadow-lg transition-all duration-300 ease-out h-full"
+      }
+    >
+      <Link
+        href={href || "#"}
+        className={cn("block cursor-pointer", className)}
+      >
+        {video && (
+          <video
+            src={video}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="pointer-events-none mx-auto h-40 w-full object-cover object-top bg-gray-100 dark:bg-gray-800"
+          />
+        )}
+        {image && (
+          <Image
+            src={image}
+            alt={title}
+            width={500}
+            height={300}
+            className="h-40 w-full overflow-hidden object-cover object-top bg-gray-100 dark:bg-gray-800"
+          />
+        )}
+      </Link>
+      <CardHeader className="px-2">
+        <div className="space-y-1">
+          <CardTitle className="mt-1 text-base">{title}</CardTitle>
+          {dates && <time className="font-sans text-xs">{dates}</time>}
+          <div className="hidden font-sans text-xs underline print:visible">
+            {link?.replace("https://", "").replace("www.", "").replace("/", "")}
+          </div>
+          <div className="prose max-w-full text-pretty font-sans text-xs text-muted-foreground dark:prose-invert">
+            <Markdown>{description}</Markdown>
+          </div>
         </div>
-      </div>
-    </div>
+      </CardHeader>
+      <CardContent className="mt-auto flex flex-col px-2">
+        {tags && tags.length > 0 && (
+          <div className="mt-2 flex flex-wrap gap-1">
+            {tags.map((tag) => (
+              <Badge
+                className="px-1 py-0 text-[10px]"
+                variant="secondary"
+                key={tag}
+              >
+                {tag}
+              </Badge>
+            ))}
+          </div>
+        )}
+      </CardContent>
+      <CardFooter className="px-2 pb-2">
+        {links && links.length > 0 && (
+          <div className="flex flex-row flex-wrap items-start gap-1">
+            {links.map((link, idx) => (
+              <Link href={link?.href} key={idx} target="_blank">
+                <Badge key={idx} className="flex gap-2 px-2 py-1 text-[10px]">
+                  {link.icon}
+                  {link.type}
+                </Badge>
+              </Link>
+            ))}
+          </div>
+        )}
+      </CardFooter>
+    </Card>
   );
-};
+}
 
-export default ProjectCard;
+export { ProjectCard };
